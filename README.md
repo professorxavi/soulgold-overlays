@@ -51,7 +51,7 @@ No more editing text files and moving numbers on screen when a new digit shows u
      - Three squares in a row that scale with the source width. Around 660 × 240 gives full-size squares.
    - `overlays/wheel/index.html` — the starter wheel (Optional)
 
-   > [!TIP]
+
    > The team widget rearranges itself based on how wide you make the browser source, so the same file works for a few different layouts. Set the **Width** and **Height** in the source's properties:
    > - **One row of 6** — width 500 or more. Around 1300 × 250 gives full-size discs.
    > - **2 columns × 3 rows** — width between 300 and 499. Around 400 × 600 works well.
