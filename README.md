@@ -99,6 +99,10 @@ The game update moved things around in memory. Wait for me to update this projec
 
 Rendering an egg is already hacky enough, I'm not adding more conditionals for something temporary.
 
+## Support
+
+If you like this and want to support me, come hang out on Twitch: [twitch.tv/professorxavier](https://www.twitch.tv/professorxavier). A follow goes a long way.
+
 ## Overly Technical Stuff
 
 This all works by emitting TCP messages through mGBA. These messages are sent over your network, but the party overlay cannot receive them. The server listens for those TCP messages and forwards them on through websockets which is what the overlay is looking for.
