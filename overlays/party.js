@@ -7,12 +7,23 @@ function hpPercent(mon) {
   return Math.max(0, Math.min(100, Math.floor(pct)));
 }
 
-function hpColors(percent) {
-  if (percent >= 100) return ["var(--ring-high-2)", "var(--ring-high-2)"];
-  if (percent >= 51) return ["var(--ring-high-2)", "var(--ring-high-1)"];
-  if (percent >= 21) return ["var(--ring-mid-2)", "var(--ring-mid-1)"];
-  if (percent >= 1) return ["var(--ring-low-2)", "var(--ring-low-1)"];
-  return ["var(--ring-low-2)", "var(--ring-low-1)"];
+function hpLevel(mon) {
+  const hp = Number(mon.hp) || 0;
+  const max = Number(mon.maxHP) || 0;
+  if (max <= 0 || hp <= 0) return "empty";
+  if (hp >= max) return "full";
+  if (hp > Math.floor(max * 50 / 100)) return "green";
+  if (hp > Math.floor(max * 20 / 100)) return "yellow";
+  return "red";
+}
+
+function hpColors(level) {
+  switch (level) {
+    case "full": return ["var(--ring-high-2)", "var(--ring-high-2)"];
+    case "green": return ["var(--ring-high-2)", "var(--ring-high-1)"];
+    case "yellow": return ["var(--ring-mid-2)", "var(--ring-mid-1)"];
+    default: return ["var(--ring-low-2)", "var(--ring-low-1)"];
+  }
 }
 
 const SPRITE_BASE = "https://eemeliri.github.io/soulgold/sprites/pokemon";
@@ -87,7 +98,7 @@ function displayNickname(mon) {
 
 // Eggs: local egg sprite, full ring, no HP/status, and no species or nickname so nothing is spoiled
 function createEggSlotHTML(mon, index) {
-  const [colorA, colorB] = hpColors(100);
+  const [colorA, colorB] = hpColors("full");
   return `
     <div class="slot">
       <div class="disc" data-key="${monKey(mon, index)}" style="--hp:100; --ring-color-a:${colorA}; --ring-color-b:${colorB};">
@@ -105,9 +116,10 @@ function createSlotHTML(mon, index) {
   if (mon.egg) return createEggSlotHTML(mon, index);
 
   const percent = hpPercent(mon);
-  const [colorA, colorB] = hpColors(percent);
+  const level = hpLevel(mon);
+  const [colorA, colorB] = hpColors(level);
   const fainted = Number(mon.hp) === 0;
-  const critical = percent >= 1 && percent <= 20;
+  const critical = level === "red";
   const species = mon.species ?? 0;
   const key = monKey(mon, index);
   const status = statusMeta(mon.status);
