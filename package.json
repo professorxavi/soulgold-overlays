@@ -1,0 +1,13 @@
+{
+  "name": "soulgold-overlay-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "mGBA TCP-to-WebSocket relay for party overlays",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

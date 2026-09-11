@@ -1,0 +1,120 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+
+.overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheel-container {
+  width: min(80vw, 80vh);
+  height: min(80vw, 80vh);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pointer arrow at the top */
+.wheel-pointer {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 32px solid var(--text);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  z-index: 10;
+}
+
+canvas#wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: var(--shadow), 10px 10px 20px rgba(0, 0, 0, 0.5), 4px 0px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Center hub — matches inner-disc style */
+.wheel-hub {
+  position: absolute;
+  width: 7%;
+  height: 7%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.08), transparent 30%),
+    var(--disc-bg);
+  border-radius: 50%;
+  border: 2px solid var(--disc-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  z-index: 5;
+}
+
+/* Winner banner */
+.winner-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 20;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.winner-banner.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Matches .counter surface style */
+.winner-banner-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.06), transparent 40%),
+    var(--disc-bg);
+  border: 1px solid var(--disc-border);
+  border-radius: 20px;
+  padding: 20px 48px 24px;
+  box-shadow: var(--shadow), 10px 10px 20px rgba(0, 0, 0, 0.5), 4px 0px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.winner-eyebrow {
+  font-size: 0.8em;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.winner-label {
+  font-size: 2.4em;
+  font-weight: var(--font-weight-bold);
+  color: var(--text);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.winner-label.colored {
+  background: linear-gradient(90deg, var(--winner-color-a), var(--winner-color-b));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

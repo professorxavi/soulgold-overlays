@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soulgold Party Overlay</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="overlay">
+    <div id="partyContainer" class="empty">Waiting for <code>party_init</code> or <code>party_changed</code>…</div>
+  </div>
+
+  <script src="./party.js"></script>
+  <script>
+    EmeraldOverlay.mountOverlay({
+      containerId: "partyContainer",
+      demoParty: [
+        { slot: 1, species: 145, nickname: 'AA-J', hp: 267, maxHP: 312, status: 'sleep' },
+        { slot: 2, species: 34, nickname: 'AAAAAAAAA', hp: 0, maxHP: 201, status: '' },
+        { slot: 3, species: 139, nickname: 'OMASTAR', hp: 156, maxHP: 183, status: 'toxic', shiny: true },
+        { slot: 4, species: 49, nickname: 'AATTVVV', hp: 52, maxHP: 139, status: 'freeze' },
+        { slot: 5, species: 131, nickname: 'EGG', hp: 150, maxHP: 150, status: '', egg: true },
+        { slot: 6, species: 18, nickname: 'aaabaaajss', hp: 215, maxHP: 257, status: 'burn', shiny: true  }
+      ]
+    });
+  </script>
+</body>
+</html>

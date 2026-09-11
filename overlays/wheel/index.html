@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Starter Wheel</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="./wheel.css" />
+</head>
+<body>
+  <div class="overlay">
+    <div id="wheelContainer" class="wheel-container">
+      <div class="wheel-pointer"></div>
+      <canvas id="wheel"></canvas>
+      <div class="wheel-hub"></div>
+      <div id="winnerBanner" class="winner-banner">
+        <div class="winner-banner-inner">
+          <span class="winner-eyebrow">Starter</span>
+          <span id="winnerLabel" class="winner-label"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./palette.js"></script>
+  <script src="./segments.js"></script>
+  <script src="./wheel.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soulgold Counters Overlay</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="overlay">
+    <div class="counters-row">
+      <div class="counter-col">
+        <div class="counter">
+          <span class="counter-value" data-key="attempt">—</span>
+          <span class="counter-title">Attempt</span>
+        </div>
+      </div>
+      <div class="counter-col counter-col--bottom">
+        <div class="counter">
+          <span class="counter-value" data-key="deaths">—</span>
+          <span class="counter-title">Deaths</span>
+        </div>
+      </div>
+      <div class="counter-col">
+        <div class="counter">
+          <span class="counter-value" data-key="levelCap">—</span>
+          <span class="counter-title">Lvl Cap</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const POLL_INTERVAL = 2000;
+
+    async function refreshCounters() {
+      try {
+        const res = await fetch("./scripts/runData.json");
+        if (!res.ok) return;
+        const data = await res.json();
+        document.querySelectorAll(".counter-value[data-key]").forEach((el) => {
+          const val = String(data[el.dataset.key] ?? "—");
+          if (val !== el.textContent) el.textContent = val;
+        });
+      } catch {
+        // file not found or network error — leave current values
+      }
+    }
+
+    refreshCounters();
+    setInterval(refreshCounters, POLL_INTERVAL);
+  </script>
+</body>
+</html>

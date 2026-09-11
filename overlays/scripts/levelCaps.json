@@ -1,0 +1,14 @@
+[
+  { "encounter": "Leader Falkner", "lvl": "12" },
+  { "encounter": "Leader Bugsy", "lvl": "19" },
+  { "encounter": "Leader Whitney", "lvl": "26" },
+  { "encounter": "Leader Morty", "lvl": "34" },
+  { "encounter": "5th Gym (Chuck / Jasmine / Pryce)", "lvl": "42" },
+  { "encounter": "6th Gym (Chuck / Jasmine / Pryce)", "lvl": "45" },
+  { "encounter": "7th Gym (Chuck / Jasmine / Pryce)", "lvl": "48" },
+  { "encounter": "Radio Tower Archer", "lvl": "55" },
+  { "encounter": "Leader Clair", "lvl": "58" },
+  { "encounter": "Ho-Oh / Lugia", "lvl": "62" },
+  { "encounter": "Champion", "lvl": "70" },
+  { "encounter": "Post-game", "lvl": "100" }
+]
