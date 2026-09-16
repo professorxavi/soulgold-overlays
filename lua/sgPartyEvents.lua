@@ -2,7 +2,7 @@ local HOST = "127.0.0.1"
 local PORT = 8765
 
 -- Found with findAddresses.lua (Soulgold ships no .sym). Re-run it if the ROM version changes.
--- Soulgold v1.1.2:
+-- Soulgold v1.1.4:
 local PARTY_LOC      = 0x0203901C   -- gPlayerParty
 local IN_BATTLE_ADDR = 0x030059F9   -- gMain + 0x439 (bit 1 = inBattle)
 

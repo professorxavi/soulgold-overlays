@@ -10,7 +10,7 @@ Gone are the days of scrolling through hundreds of sprites to find the mon you a
 No more editing text files and moving numbers on screen when a new digit shows up.
 
 > [!IMPORTANT]
-> The party widget is built for **Pokémon Soulgold v1.1.2**. Game updates can move things around in memory, which may break it until this project is updated too — so check that your game version matches before setting up. If a new version has just come out, see the [FAQs](#faqs).
+> The party widget is built for **Pokémon Soulgold v1.1.4**. Game updates can move things around in memory, which may break it until this project is updated too — so check that your game version matches before setting up. If a new version has just come out, see the [FAQs](#faqs).
 
 ## What's Included
 

@@ -5,7 +5,11 @@ To use an older/newer version, paste that row's values over `PARTY_LOC` and `IN_
 
 | Soulgold version | `PARTY_LOC` (gPlayerParty) | `gMain` | `IN_BATTLE_ADDR` (gMain + 0x439) | Notes |
 |---|---|---|---|---|
-| v1.1.2 | `0x0203901C` | `0x030055C0` | `0x030059F9` | Shipped default |
+| v1.1.4 | `0x0203901C` | `0x030055C0` | `0x030059F9` | Shipped default |
+| v1.1.3 | `0x0203901C` | `0x030055C0` | `0x030059F9` | |
+| v1.1.2 | `0x0203901C` | `0x030055C0` | `0x030059F9` | |
+
+Nothing has moved since v1.1.2 — if you're on any of these, the script works as shipped.
 
 Mon struct offsets (unchanged across versions unless the game updates its pokeemerald-expansion base, currently 1.15.2):
 `personality +0`, `otId +4`, `nickname +8`, `isEgg` bit 2 of u8 at `+21`, `shinyModifier` bit 14 of u16 at `+30`, `species` low 11 bits of u16 at `+32`,
