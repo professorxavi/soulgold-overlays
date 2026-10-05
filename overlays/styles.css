@@ -332,3 +332,32 @@ body { padding: 20px; }
   line-height: 1;
   white-space: nowrap;
 }
+
+/* Badges: one 16x16 cell per badge in badges.png (8 across). Unearned badges keep the
+   badge's shape as a mask, filled with the disc color. */
+.badge-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: clamp(4px, 1.2%, 24px);
+}
+
+.badge {
+  flex: 1 1 0;
+  aspect-ratio: 1 / 1;
+  image-rendering: pixelated;
+  background-size: 800% 100%;
+  background-position: calc(var(--i) * 100% / 7) 0;
+  background-repeat: no-repeat;
+}
+
+.badge.earned {
+  background-image: url("./badges.png");
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+}
+
+.badge.missing {
+  background-color: var(--disc-bg);
+  -webkit-mask: url("./badges.png") no-repeat calc(var(--i) * 100% / 7) 0 / 800% 100%;
+  mask: url("./badges.png") no-repeat calc(var(--i) * 100% / 7) 0 / 800% 100%;
+}

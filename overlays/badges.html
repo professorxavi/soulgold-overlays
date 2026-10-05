@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soulgold Badge Overlay</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./theme.css" />
+</head>
+<body>
+  <div class="overlay">
+    <div id="badgeContainer" class="empty">Waiting for <code>badges_init</code> or <code>badges_changed</code>…</div>
+  </div>
+
+  <script src="./badges.js"></script>
+  <script>
+    BadgeOverlay.mountBadges({
+      containerId: "badgeContainer",
+      demoBadges: [true, true, true, false, true, false, false, false]
+    });
+  </script>
+</body>
+</html>

@@ -7,6 +7,10 @@
 --
 --   PARTY_LOC      = 0x0202XXXX
 --   IN_BATTLE_ADDR = 0x0300XXXX
+--   SAVEBLOCK1_PTR = 0x0300XXXX
+--
+-- SAVEBLOCK1_PTR is found through SaveBlock1's copy of the party, which the game
+-- only refreshes when saving - save in game first so it matches the live party.
 --
 -- Set LEAD_NICKNAME to your lead Pokémon's exact nickname (as shown in game) to
 -- also search for its encoded bytes directly - useful if the struct scan finds
@@ -23,6 +27,7 @@ local CHUNK = 0x8000
 
 local PARTY_MON_SIZE = 96
 local NUM_SPECIES    = 1578
+local SB1_OFF_PARTY  = 0x238   -- SaveBlock1.playerParty
 
 local function readBlock(base, size)
     local parts = {}
@@ -185,6 +190,25 @@ local function findMain(a, b)
 end
 
 ------------------------------------------------
+-- gSaveBlock1Ptr
+------------------------------------------------
+
+-- IWRAM words pointing into EWRAM where +0x238 holds the lead's personality
+local function findSaveBlock1Ptr(iwram, ewram, personality)
+    local hits = {}
+    for o = 0, IWRAM_SIZE - 4, 4 do
+        local p = u32(iwram, o)
+        local off = p - EWRAM_BASE + SB1_OFF_PARTY
+        if p >= EWRAM_BASE and off >= 0 and off <= EWRAM_SIZE - 4 and (p & 3) == 0
+            and u32(ewram, off) == personality
+        then
+            hits[#hits + 1] = IWRAM_BASE + o
+        end
+    end
+    return hits
+end
+
+------------------------------------------------
 -- Driver
 ------------------------------------------------
 
@@ -214,6 +238,16 @@ local function report()
     end
     for _, addr in ipairs(mainHits) do
         console:log(string.format("[finder] gMain = 0x%08X  ->  IN_BATTLE_ADDR = 0x%08X", addr, addr + 0x439))
+    end
+
+    if #partyHits > 0 then
+        local sb1Hits = findSaveBlock1Ptr(snapB, ewram, u32(ewram, partyHits[1]))
+        if #sb1Hits == 0 then
+            console:warn("[finder] no gSaveBlock1Ptr candidates (save in game, then reload this script)")
+        end
+        for _, addr in ipairs(sb1Hits) do
+            console:log(string.format("[finder] SAVEBLOCK1_PTR = 0x%08X  (-> SaveBlock1 at 0x%08X)", addr, u32(snapB, addr - IWRAM_BASE)))
+        end
     end
 end
 

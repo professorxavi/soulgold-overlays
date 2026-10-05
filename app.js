@@ -25,9 +25,10 @@ const server = http.createServer((req, res) => {
 
 const wss = new WebSocket.Server({ server });
 
-// Last party message seen. The Lua script only sends party_init once, so browsers
-// that connect (or refresh) later would otherwise wait until the party changes.
+// Last party/badges messages seen. The Lua script only sends *_init once, so browsers
+// that connect (or refresh) later would otherwise wait until something changes.
 let lastParty = null;
+let lastBadges = null;
 
 function broadcast(raw) {
   for (const client of wss.clients) {
@@ -40,6 +41,7 @@ function broadcast(raw) {
 wss.on("connection", (ws, req) => {
   console.log(`[ws] client connected from ${req.socket.remoteAddress}`);
   if (lastParty) ws.send(lastParty);
+  if (lastBadges) ws.send(lastBadges);
   ws.on("close", () => {
     console.log("[ws] client disconnected");
   });
@@ -70,6 +72,7 @@ const tcpServer = net.createServer((socket) => {
       try {
         const msg = JSON.parse(line);
         if (msg.type === "party_init" || msg.type === "party_changed") lastParty = line;
+        if (msg.type === "badges_init" || msg.type === "badges_changed") lastBadges = line;
         broadcast(line);
       } catch (err) {
         console.warn("[tcp] dropped invalid JSON line:", err.message);

@@ -5,6 +5,7 @@ local PORT = 8765
 -- Soulgold v1.1.4:
 local PARTY_LOC      = 0x0203901C   -- gPlayerParty
 local IN_BATTLE_ADDR = 0x030059F9   -- gMain + 0x439 (bit 1 = inBattle)
+local SAVEBLOCK1_PTR = 0x030040C4   -- gSaveBlock1Ptr; 0 = badges disabled until set from findAddresses.lua
 
 -- pokeemerald-expansion 1.15 layout (BoxPokemon = 76 bytes, unencrypted)
 -- Party count is derived from leading non-empty slots; the game zeroes vacated slots
@@ -22,12 +23,23 @@ local OFF_LEVEL      = 80   -- u8
 local OFF_HP         = 82   -- u16
 local OFF_MAXHP      = 84   -- u16
 
+-- SaveBlock1 moves around EWRAM on save/load, so it is re-read through gSaveBlock1Ptr each time
+local SB1_OFF_FLAGS  = 0x1898  -- measured in game (v1.1.4); global.h offset comments and struct-size math both come out wrong
+local FLAG_BADGE01   = 0x993  -- SYSTEM_FLAGS (0x500 + MAX_TRAINERS_COUNT 1164) + 7
+local NUM_BADGES     = 8
+-- The game moves SaveBlock1 on battle start / map load; a read landing mid-copy sees garbage,
+-- so a changed reading must hold this many frames before it is emitted.
+local BADGE_SETTLE_FRAMES = 30
+
 local sock = nil
 local connected = false
 
 local state = {
     party = nil,
     lockedParty = nil,
+    badges = nil,
+    pendingBadges = nil,
+    pendingSince = 0,
 }
 
 ------------------------------------------------
@@ -294,6 +306,7 @@ local function partiesEqualBattleVisible(a, b)
         if a[i].hp ~= b[i].hp then return false end
         if a[i].maxHP ~= b[i].maxHP then return false end
         if a[i].statusRaw ~= b[i].statusRaw then return false end
+        if a[i].species ~= b[i].species then return false end -- in-battle form changes (megas, Palafin)
     end
 
     return true
@@ -315,6 +328,7 @@ local function mergeBattleVisibleIntoLocked(currentParty, lockedParty)
             merged[i].maxHP = live.maxHP
             merged[i].statusRaw = live.statusRaw
             merged[i].status = live.status
+            merged[i].species = live.species
         end
         merged[i].slot = i
     end
@@ -385,6 +399,60 @@ local function detectParty()
 end
 
 ------------------------------------------------
+-- Badges
+------------------------------------------------
+
+local function readBadges()
+    local sb1 = emu:read32(SAVEBLOCK1_PTR)
+    if sb1 < 0x02000000 or sb1 >= 0x02040000 then
+        return nil -- no save loaded yet
+    end
+    local badges = {}
+    for i = 1, NUM_BADGES do
+        local flag = FLAG_BADGE01 + i - 1
+        badges[i] = (emu:read8(sb1 + SB1_OFF_FLAGS + (flag >> 3)) & (1 << (flag & 7))) ~= 0
+    end
+    return badges
+end
+
+local function badgesEqual(a, b)
+    for i = 1, NUM_BADGES do
+        if a[i] ~= b[i] then return false end
+    end
+    return true
+end
+
+local function detectBadges()
+    if SAVEBLOCK1_PTR == 0 then
+        return
+    end
+
+    local badges = readBadges()
+    if not badges then
+        return
+    end
+
+    if state.badges and badgesEqual(badges, state.badges) then
+        state.pendingBadges = nil
+        return
+    end
+
+    if not (state.pendingBadges and badgesEqual(badges, state.pendingBadges)) then
+        state.pendingBadges = badges
+        state.pendingSince = emu:currentFrame()
+        return
+    end
+
+    if emu:currentFrame() - state.pendingSince < BADGE_SETTLE_FRAMES then
+        return
+    end
+
+    emit(state.badges and "badges_changed" or "badges_init", { badges = badges })
+    state.badges = badges
+    state.pendingBadges = nil
+end
+
+------------------------------------------------
 -- Frame callback
 ------------------------------------------------
 
@@ -394,8 +462,12 @@ local function tick()
         return
     end
     detectParty()
+    detectBadges()
 end
 
 callbacks:add("frame", tick)
 
 console:log("soulgold party event stream loaded")
+if SAVEBLOCK1_PTR == 0 then
+    console:warn("badges disabled: set SAVEBLOCK1_PTR (run findAddresses.lua)")
+end
